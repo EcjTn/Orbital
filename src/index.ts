@@ -58,6 +58,7 @@ chatapp.on('connection', (socket) => {
 
         if(!data || !allowedRooms.includes(data.room)) {
             socket.emit('error', 'Action not allowed')
+            return
         }
 
         console.log(`${socketUsername}: ${data.message} --> ${data.room}`)
