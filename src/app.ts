@@ -9,7 +9,6 @@ app.use(express.json())
 app.use(cors())
 
 
-
 // Endpoints
 app.get('/', (req, res) => {
     console.log(req.ip, 'visited')
