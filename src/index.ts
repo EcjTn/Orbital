@@ -55,11 +55,16 @@ chatapp.on('connection', (socket) => {
 
     // Listening for a msgs, but has specific details WHERE it is SENT TO
     socket.on('message', (data: IMessageData) => {
+
+        if(!data || !allowedRooms.includes(data.room)) {
+            socket.emit('error', 'Action not allowed')
+        }
+
         console.log(`${socketUsername}: ${data.message} --> ${data.room}`)
 
-        chatapp.to(data.room).emit('message', {
+        chatapp.to(data?.room || 'Public').emit('message', {
             username: socketUsername,
-            message: data.message
+            message: data?.message || ".."
         })
 
     })
