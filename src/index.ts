@@ -69,6 +69,7 @@ chatapp.on('connection', (socket) => {
     socket.on('disconnect', () => {
         socket.broadcast.emit('leftAnnouncement', `${socketUsername} left`)
         console.log(`${socketUsername} left chatapp`)
+        users.delete(socket.id)
     })
     
 
