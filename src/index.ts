@@ -39,7 +39,7 @@ chatapp.on('connection', (socket) => {
 
 
     // For clients thats joining a room
-    socket.on('joinRoom', roomName => {
+    socket.on('joinRoom', (roomName: string) => {
 
         if(!roomName || !allowedRooms.includes(roomName)){
             socket.emit('error', 'Action not allowed')
@@ -49,7 +49,7 @@ chatapp.on('connection', (socket) => {
         socket.join(roomName)
         console.log(`${socketUsername} Joined ${roomName}`)
 
-        chatapp.to(roomName).emit('announcement', `${socketUsername} Joined the room!`) //FE expects this emit
+        chatapp.to(roomName).emit('joinAnnouncement', `${socketUsername} Joined the room!`) //FE expects this emit
     })
 
 
@@ -63,7 +63,28 @@ chatapp.on('connection', (socket) => {
         })
 
     })
+
+
+    // Listening for disconnects
+    socket.on('disconnect', () => {
+        socket.broadcast.emit('leftAnnouncement', `${socketUsername} left`)
+        console.log(`${socketUsername} left chatapp`)
+    })
     
+
+    // Listening for leave
+    socket.on('leaveReq', (roomName: string) => {
+        if(!roomName || !allowedRooms.includes(roomName)){
+            socket.emit('error', 'Action not allowed')
+            return
+        }
+
+        socket.to(roomName).emit('leftAnnouncement', `${socketUsername} left`)
+        socket.leave(roomName)
+        console.log(`${socketUsername} Left from ${roomName}`)
+    })
+    
+
 })
 
 
