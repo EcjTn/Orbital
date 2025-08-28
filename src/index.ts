@@ -1,7 +1,9 @@
 import http from 'http'
 import app from './app.js';
 import { Server } from 'socket.io';
+
 import { IMessageData } from './interfaces/client-data.js';
+import { validateMessageData } from './validator/client-validation.js';
 
 const server = http.createServer(app)
 
@@ -30,7 +32,6 @@ chatapp.on('connection', (socket) => {
 
     // Clients setting up their Username
     let socketUsername: string | undefined = ''
-    console.log(`${socket.id} Joined chatapp/`)
 
     socket.on('setUsername', (username: string) => {
         users.set(socket.id, username)
@@ -54,18 +55,27 @@ chatapp.on('connection', (socket) => {
 
 
     // Listening for a msgs, but has specific details WHERE it is SENT TO
-    socket.on('message', (data: IMessageData) => {
+    socket.on('message', async(data: IMessageData) => {
 
-        if(!data || !allowedRooms.includes(data.room)) {
+        const messageData: IMessageData = await validateMessageData(data)
+        if(!messageData){
+            socket.emit('error', 'Invalid data')
+            return
+        }
+
+        console.log('Validated:', messageData) //testing purposes
+
+        if(!allowedRooms.includes(messageData.room)) {
             socket.emit('error', 'Action not allowed')
             return
         }
 
         console.log(`${socketUsername}: ${data.message} --> ${data.room}`)
 
-        chatapp.to(data?.room || 'Public').emit('message', {
+
+        chatapp.to(data.room).emit('message', {
             username: socketUsername,
-            message: data?.message || ".."
+            message: data.message
         })
 
     })
