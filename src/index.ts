@@ -2,14 +2,17 @@ import http from 'http'
 import app from './app.js';
 import { Server } from 'socket.io';
 
-import { IMessageData } from './interfaces/client-data.js';
-import { validateMessageData } from './validator/client-validation.js';
 import { socketLoggerEntry } from './socket-middleware/logger.js';
 
+// ChatApp Routes
+import { handleDisconnect, handleJoinRoom, handleLeave, handleMessage, handleSetUsername } from './socket-routes/chat-route.js';
+
+//Interfaces -- if confused with data shapes
+import { IMessageData } from './interfaces/client-data.js';
+
+
+
 const server = http.createServer(app)
-
-const users = new Map<string, string>()
-
 
 const io = new Server(server, {
     cors: {
@@ -23,8 +26,6 @@ io.on('connection', socket => {
 })
 
 
-const allowedRooms:string[] = ['Public', 'Gaming']
-
 // Chat Namespace
 const chatapp = io.of('/chat')
 
@@ -37,73 +38,19 @@ chatapp.on('connection', (socket) => {
 
 
     // Clients setting up their Username
-    let socketUsername: string | undefined = ''
-
-    socket.on('setUsername', (username: string) => {
-        users.set(socket.id, username)
-        socketUsername = users.get(socket.id)
-    })
-
+    socket.on('setUsername', (username: string) => handleSetUsername(socket, username))
 
     // For clients thats joining a room
-    socket.on('joinRoom', (roomName: string) => {
+    socket.on('joinRoom', (roomName: string) => handleJoinRoom(socket, chatapp, roomName))
 
-        if(!roomName || !allowedRooms.includes(roomName)){
-            socket.emit('error', 'Action not allowed')
-            return
-        }
-
-        socket.join(roomName)
-        console.log(`${socketUsername} Joined ${roomName}`)
-
-        chatapp.to(roomName).emit('joinAnnouncement', `${socketUsername} Joined the room!`) //FE expects this emit
-    })
-
-
-    // Listening for a msgs, but has specific details WHERE it is SENT TO
-    socket.on('message', async(data: IMessageData) => {
-
-        const messageData: IMessageData = await validateMessageData(data)
-        if(!messageData){
-            socket.emit('error', 'Invalid data')
-            return
-        }
-
-        console.log('Validated:', messageData) //testing purposes
-
-        if(!allowedRooms.includes(messageData.room)) {
-            socket.emit('error', 'Action not allowed')
-            return
-        }
-        
-        chatapp.to(data.room).emit('message', {
-            username: socketUsername,
-            message: data.message
-        })
-
-    })
-
+    // Listening for messages - Object specifies where it is sent to
+    socket.on('message', (data: IMessageData) => handleMessage(socket, chatapp, data))
 
     // Listening for disconnects
-    socket.on('disconnect', () => {
-        socket.broadcast.emit('leftAnnouncement', `${socketUsername} left`)
-        console.log(`${socketUsername} left chatapp`)
-        users.delete(socket.id)
-    })
-    
+    socket.on('disconnect', () => handleDisconnect(socket))
 
-    // Listening for leave
-    socket.on('leaveReq', (roomName: string) => {
-        if(!roomName || !allowedRooms.includes(roomName)){
-            socket.emit('error', 'Action not allowed')
-            return
-        }
-
-        socket.to(roomName).emit('leftAnnouncement', `${socketUsername} left`)
-        socket.leave(roomName)
-        console.log(`${socketUsername} Left from ${roomName}`)
-    })
-    
+    // Listening for leave requests
+    socket.on('leaveReq', (roomName: string) => handleLeave(socket, roomName))
 
 })
 
