@@ -2,7 +2,9 @@ import http from 'http'
 import app from './app.js';
 import { Server } from 'socket.io';
 
+// Middlewares
 import { socketLoggerEntry } from './socket-middleware/logger.js';
+import { requireUsername } from './socket-middleware/require-username.js';
 
 // ChatApp Routes
 import { handleDisconnect, handleJoinRoom, handleLeave, handleMessage, handleSetUsername } from './socket-routes/chat-route.js';
@@ -32,7 +34,7 @@ const chatapp = io.of('/chat')
 
 // Middlewares
 chatapp.use(socketLoggerEntry)
-
+chatapp.use(requireUsername)
 
 chatapp.on('connection', (socket) => {
 
