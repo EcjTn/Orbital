@@ -7,7 +7,7 @@ import { socketLoggerEntry } from './socket-middleware/logger.js';
 import { requireUsername } from './socket-middleware/require-username.js';
 
 // ChatApp Routes
-import { handleDisconnect, handleJoinRoom, handleLeave, handleMessage, handleSetUsername } from './socket-routes/chat-route.js';
+import { handleDisconnect, handleJoinRoom, handleLeave, handleMessage } from './socket-routes/chat-route.js';
 
 //Interfaces -- if confused with data shapes
 import { IMessageData } from './interfaces/client-data.js';
@@ -37,10 +37,6 @@ chatapp.use(socketLoggerEntry)
 chatapp.use(requireUsername)
 
 chatapp.on('connection', (socket) => {
-
-
-    // Clients setting up their Username
-    socket.on('setUsername', (username: string) => handleSetUsername(socket, username))
 
     // For clients thats joining a room
     socket.on('joinRoom', (roomName: string) => handleJoinRoom(socket, chatapp, roomName))
