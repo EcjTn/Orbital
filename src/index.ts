@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 
 import { IMessageData } from './interfaces/client-data.js';
 import { validateMessageData } from './validator/client-validation.js';
+import { socketLoggerEntry } from './socket-middleware/logger.js';
 
 const server = http.createServer(app)
 
@@ -26,6 +27,11 @@ const allowedRooms:string[] = ['Public', 'Gaming']
 
 // Chat Namespace
 const chatapp = io.of('/chat')
+
+
+// Middlewares
+chatapp.use(socketLoggerEntry)
+
 
 chatapp.on('connection', (socket) => {
 
@@ -69,10 +75,7 @@ chatapp.on('connection', (socket) => {
             socket.emit('error', 'Action not allowed')
             return
         }
-
-        console.log(`${socketUsername}: ${data.message} --> ${data.room}`)
-
-
+        
         chatapp.to(data.room).emit('message', {
             username: socketUsername,
             message: data.message
