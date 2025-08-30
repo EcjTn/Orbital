@@ -13,7 +13,7 @@ A simple real-time chat application built with **Socket.IO** and **TypeScript**,
 - Clone the repo
 ```git clone <repo-url>```
 
-- Install deoendencies
+- Install dependencies
 ```npm install```
 
 - Run Server
