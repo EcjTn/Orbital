@@ -9,6 +9,17 @@ A simple real-time chat application built with **Socket.IO** and **TypeScript**,
 - Stores active users using **JavaScript `Map` and `Set`** (all data is temporary/resets on server restart).
 - Minimal **Express.js** server included for future expansion (authentication, security, etc.).
 
+## Installation 
+- Clone the repo
+```git clone <repo-url>```
+
+- Install deoendencies
+```npm install```
+
+- Run Server
+```npm start```
+
+
 ## Goals / Roadmap
 
 - Upgrade for full **browser client support**.
