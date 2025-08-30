@@ -1,15 +1,12 @@
 import { Namespace, Socket } from 'socket.io';
 
 import { validateMessageData } from '../validator/client-validation.js';
-import { allowedRooms, users } from "../config.js";
+import { allowedRooms, usernames, users } from "../config.js";
 
 import { IMessageData } from "../interfaces/client-data.js";
 
 
 
-export function handleSetUsername(socket: Socket, username: string) { 
-    users.set(socket.id, username)
-}
 
 
 
@@ -52,12 +49,17 @@ export async function handleMessage(socket: Socket, chatapp: Namespace, data: IM
 
 
 export function handleDisconnect(socket: Socket) {
-    const socketUsername = users.get(socket.id)
+
+    const socketUsername: string | undefined = users.get(socket.id)
+
+    if (!socketUsername) return; // user was not registered
 
     socket.broadcast.emit("leftAnnouncement", `${socketUsername} left`)
-    console.log(`${socketUsername} left chatapp`)
+    console.log(`${socketUsername} left Public`)
 
     users.delete(socket.id)
+    usernames.delete(socketUsername as string)
+
 }
 
 
