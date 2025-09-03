@@ -1,13 +1,9 @@
 import { Namespace, Socket } from 'socket.io';
 
 import { validateMessageData } from '../validator/client-validation.js';
-import { allowedRooms, usernames, users } from "../config.js";
+import { allowedRooms, usernames, users, typingUsers } from "../config.js";
 
 import { IMessageData } from "../interfaces/client-data.js";
-
-
-
-
 
 
 export function handleJoinRoom(socket: Socket, chatapp: Namespace, roomName: string) {
@@ -24,6 +20,11 @@ export function handleJoinRoom(socket: Socket, chatapp: Namespace, roomName: str
     chatapp.to(roomName).emit("joinAnnouncement", `${socketUsername} Joined the room!`)
 }
 
+
+
+export function handleTypingUsers(socket: Socket, data: string) {
+    socket.broadcast.emit("typingUsers", data)
+}
 
 
 export async function handleMessage(socket: Socket, chatapp: Namespace, data: IMessageData) {

@@ -7,7 +7,12 @@ import { socketLoggerEntry } from './socket-middleware/logger.js';
 import { requireUsername } from './socket-middleware/require-username.js';
 
 // ChatApp Routes
-import { handleDisconnect, handleJoinRoom, handleLeave, handleMessage } from './socket-routes/chat-route.js';
+import { 
+    handleDisconnect, 
+    handleJoinRoom, 
+    handleLeave, 
+    handleMessage,
+    handleTypingUsers } from './socket-routes/chat-route.js';
 
 //Interfaces -- if confused with data shapes
 import { IMessageData } from './interfaces/client-data.js';
@@ -49,6 +54,10 @@ chatapp.on('connection', (socket) => {
 
     // Listening for leave requests
     socket.on('leaveReq', (roomName: string) => handleLeave(socket, roomName))
+
+    // Listening for typing users
+    //Client detects typing and calls this
+    socket.on('typingUsers', (data: string) => handleTypingUsers(socket, data))
 
 })
 
