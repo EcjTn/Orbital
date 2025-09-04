@@ -22,8 +22,18 @@ export function handleJoinRoom(socket: Socket, chatapp: Namespace, roomName: str
 
 
 
-export function handleTypingUsers(socket: Socket, data: string) {
-    socket.broadcast.emit("typingUsers", data)
+export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName: string) {
+
+    if(!roomName || !allowedRooms.includes(roomName)) {
+        socket.emit("error", "Action not allowed")
+        return
+    }
+
+    const socketUsername = users.get(socket.id)
+    typingUsers.add(socketUsername as string)
+
+    chatapp.to(roomName).emit("showTyping", typingUsers)
+
 }
 
 

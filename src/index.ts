@@ -12,7 +12,7 @@ import {
     handleJoinRoom, 
     handleLeave, 
     handleMessage,
-    handleTypingUsers } from './socket-routes/chat-route.js';
+    handleTypedInUsers } from './socket-routes/chat-route.js';
 
 //Interfaces -- if confused with data shapes
 import { IMessageData } from './interfaces/client-data.js';
@@ -57,7 +57,7 @@ chatapp.on('connection', (socket) => {
 
     // Listening for typing users
     //Client detects typing and calls this
-    socket.on('typingUsers', (data: string) => handleTypingUsers(socket, data))
+    socket.on('typedIn', (roomName: string) => handleTypedInUsers(chatapp, socket, roomName))
 
 })
 
