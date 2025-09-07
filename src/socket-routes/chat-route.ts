@@ -32,7 +32,7 @@ export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName:
     const socketUsername = users.get(socket.id)
     typingUsers.add(socketUsername as string)
 
-    chatapp.to(roomName).emit("showTyping", typingUsers)
+    chatapp.to(roomName).emit("showTyping", `${Array.from(typingUsers)} is typing...`)
 
 }
 

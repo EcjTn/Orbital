@@ -328,7 +328,7 @@
     <script>
         let username = null;
         let socket = null;
-        const defaultRoom = 'general';
+        const defaultRoom = 'Public';
 
         document.querySelectorAll('.theme-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -363,6 +363,19 @@
             socket.on('connect', () => {
                 console.log('Connected to Socket.IO server');
                 socket.emit('joinRoom', "Public");
+
+                socket.on('showTyping', (data) => {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message', 'announcement');
+                    messageElement.innerHTML = `<p>${data}</p>`;
+                    document.getElementById('chatMessages').appendChild(messageElement);
+                    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+                })
+
+                const messageInput = document.getElementById('messageInput');
+                messageInput.addEventListener('input', (event) => {
+                    socket.emit('typedIn', defaultRoom);
+                });
 
                 socket.on('message', (data) => {
                     const messageElement = document.createElement('div');
@@ -434,6 +447,8 @@
                 showError('Not connected to the server. Please try again later.');
             }
         }
+
+
 
         document.getElementById('messageInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
