@@ -311,6 +311,7 @@
         </div>
         
         <div class="chat-messages" id="chatMessages"></div>
+        <div id="typingIndicator"></div>
         <div class="input-container">
             <input type="text" id="messageInput" placeholder="Type a message...">
             <button onclick="sendMessage()">Send</button>
@@ -365,11 +366,11 @@
                 socket.emit('joinRoom', "Public");
 
                 socket.on('showTyping', (data) => {
-                    const messageElement = document.createElement('div');
-                    messageElement.classList.add('message', 'announcement');
-                    messageElement.innerHTML = `<p>${data}</p>`;
-                    document.getElementById('chatMessages').appendChild(messageElement);
-                    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+                    const typingIndicatorBox = document.createElement('div');
+                    typingIndicatorBox.classList.add('message', 'announcement');
+                    typingIndicatorBox.innerHTML = `<p>${data}</p>`;
+                    document.getElementById('typingIndicator').replaceWith(typingIndicatorBox, document.getElementById('typingIndicator'));
+                    //document.getElementById('typingIndicator').scrollTop = document.getElementById('chatMessages').scrollHeight;
                 })
 
                 const messageInput = document.getElementById('messageInput');

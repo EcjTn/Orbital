@@ -24,6 +24,8 @@ export function handleJoinRoom(socket: Socket, chatapp: Namespace, roomName: str
 
 export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName: string) {
 
+    const typingUsersArray = Array.from(typingUsers)
+
     if(!roomName || !allowedRooms.includes(roomName)) {
         socket.emit("error", "Action not allowed")
         return
@@ -32,7 +34,17 @@ export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName:
     const socketUsername = users.get(socket.id)
     typingUsers.add(socketUsername as string)
 
-    chatapp.to(roomName).emit("showTyping", `${Array.from(typingUsers)} is typing...`)
+    if(typingUsersArray.length === 1) {
+        chatapp.to(roomName).emit("showTyping", `${socketUsername} is typing...`)
+        return
+    }
+
+    if(typingUsersArray.length > 2) {
+        chatapp.to(roomName).emit("showTyping", 'Many people are typing...')
+        return
+    }
+
+    chatapp.to(roomName).emit("showTyping", `${typingUsersArray.join(' and ')} are typing...`)
 
 }
 
