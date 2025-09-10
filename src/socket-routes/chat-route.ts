@@ -22,7 +22,7 @@ export function handleJoinRoom(socket: Socket, chatapp: Namespace, roomName: str
 
 
 
-export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName: string) {
+export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName: string): void {
 
     const typingUsersArray = Array.from(typingUsers)
 
@@ -34,17 +34,8 @@ export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName:
     const socketUsername = users.get(socket.id)
     typingUsers.add(socketUsername as string)
 
-    if(typingUsersArray.length === 1) {
-        chatapp.to(roomName).emit("showTyping", `${socketUsername} is typing...`)
-        return
-    }
-
-    if(typingUsersArray.length > 2) {
-        chatapp.to(roomName).emit("showTyping", 'Many people are typing...')
-        return
-    }
-
-    chatapp.to(roomName).emit("showTyping", `${typingUsersArray.join(' and ')} are typing...`)
+    console.log(`Typing users: ${typingUsersArray}`)
+    chatapp.to(roomName).emit("showTyping", typingUsersArray)
 
 }
 
