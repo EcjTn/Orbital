@@ -3,11 +3,16 @@ import app from './app.js';
 import { Server } from 'socket.io';
 
 // Middlewares
-import { socketLoggerEntry } from './socket-middleware/logger.js';
+// import { socketLoggerEntry } from './socket-middleware/logger.js'; --- TEMPORARY
 import { requireUsername } from './socket-middleware/require-username.js';
 
 // ChatApp Routes
-import { handleDisconnect, handleJoinRoom, handleLeave, handleMessage } from './socket-routes/chat-route.js';
+import { 
+    handleDisconnect, 
+    handleJoinRoom, 
+    handleLeave, 
+    handleMessage,
+    handleTypedInUsers } from './socket-routes/chat-route.js';
 
 //Interfaces -- if confused with data shapes
 import { IMessageData } from './interfaces/client-data.js';
@@ -33,7 +38,7 @@ const chatapp = io.of('/chat')
 
 
 // Middlewares
-chatapp.use(socketLoggerEntry)
+// chatapp.use(socketLoggerEntry) --- TEMPORARY
 chatapp.use(requireUsername)
 
 chatapp.on('connection', (socket) => {
@@ -50,6 +55,10 @@ chatapp.on('connection', (socket) => {
     // Listening for leave requests
     socket.on('leaveReq', (roomName: string) => handleLeave(socket, roomName))
 
+    // Listening for typing users
+    //Client detects typing and calls this
+    socket.on('typedIn', (roomName: string) => handleTypedInUsers(chatapp, socket, roomName))// Removing of typing users are handled by this event too
+    
 })
 
 
@@ -58,5 +67,5 @@ chatapp.on('connection', (socket) => {
 
 
 server.listen(8000, () => {
-    console.log('*')
+    console.log('Waiting for connections...')
 })

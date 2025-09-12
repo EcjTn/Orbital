@@ -8,6 +8,7 @@ A simple real-time chat application built with **Socket.IO** and **TypeScript**,
 - Enforces username authentication on connection via a Socket.IO middleware.
 - Stores active users using **JavaScript `Map` and `Set`** (all data is temporary/resets on server restart).
 - Minimal **Express.js** server included for future expansion (authentication, security, etc.).
+- Typing indicators
 
 ## Installation 
 - Clone the repo
@@ -22,7 +23,7 @@ A simple real-time chat application built with **Socket.IO** and **TypeScript**,
 
 ## Goals / Roadmap
 
-- Upgrade for full **browser client support**.
+- Upgrade for full **browser client support**.✅
 - Integrate **Express.js features** such as authentication and security enhancements.
 - Implement persistent user storage to survive server restarts.
 - Add more advanced chat features (rooms, private messaging, notifications).

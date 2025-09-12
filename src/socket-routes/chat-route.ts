@@ -1,13 +1,9 @@
 import { Namespace, Socket } from 'socket.io';
 
 import { validateMessageData } from '../validator/client-validation.js';
-import { allowedRooms, usernames, users } from "../config.js";
+import { allowedRooms, usernames, users, typingUsers } from "../config.js";
 
 import { IMessageData } from "../interfaces/client-data.js";
-
-
-
-
 
 
 export function handleJoinRoom(socket: Socket, chatapp: Namespace, roomName: string) {
@@ -26,9 +22,28 @@ export function handleJoinRoom(socket: Socket, chatapp: Namespace, roomName: str
 
 
 
-export async function handleMessage(socket: Socket, chatapp: Namespace, data: IMessageData) {
+export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName: string): void {
+
+    if(!roomName || !allowedRooms.includes(roomName)) {
+        socket.emit("error", "Action not allowed")
+        return
+    }
+
     const socketUsername = users.get(socket.id)
+    typingUsers.add(socketUsername as string)
+
+    chatapp.to(roomName).emit("showTyping", Array.from(typingUsers)) //Client expects an array
+}
+
+
+
+export async function handleMessage(socket: Socket, chatapp: Namespace, data: IMessageData) {
+
+    const socketUsername: string | undefined = users.get(socket.id)
+    if (!socketUsername) return; // user was not registered
     const messageData: IMessageData = await validateMessageData(data)
+
+    
 
     if (!messageData) {
         socket.emit("error", "Invalid data")
@@ -44,6 +59,12 @@ export async function handleMessage(socket: Socket, chatapp: Namespace, data: IM
         username: socketUsername,
         message: messageData.message,
     })
+
+    typingUsers.delete(socketUsername as string) //remove typing user after message
+
+    //update typing users
+    const typingUsersArray = Array.from(typingUsers)
+    chatapp.to(messageData.room).emit("showTyping", typingUsersArray)
 }
 
 
@@ -59,6 +80,7 @@ export function handleDisconnect(socket: Socket) {
 
     users.delete(socket.id)
     usernames.delete(socketUsername as string)
+    typingUsers.delete(socketUsername as string)
 
 }
 
