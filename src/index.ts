@@ -69,5 +69,5 @@ chatapp.on('connection', (socket) => {
 
 
 server.listen(8000, () => {
-    console.log('*')
+    console.log('Waiting for connections...')
 })
