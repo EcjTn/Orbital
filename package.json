@@ -1,7 +1,7 @@
 {
   "name": "orbital",
   "version": "1.5.0",
-  "main": "index.js",
+  "main": "./out/index.js",
   "type": "module",
   "scripts": {
     "compile": "tsc",
