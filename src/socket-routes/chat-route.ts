@@ -34,7 +34,7 @@ export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName:
     const socketUsername = users.get(socket.id)
     typingUsers.add(socketUsername as string)
 
-    console.log(`Typing users: ${typingUsersArray}`)
+    console.log("Typing users:", typingUsersArray)
     chatapp.to(roomName).emit("showTyping", typingUsersArray)
 
 }
