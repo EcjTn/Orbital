@@ -24,8 +24,6 @@ export function handleJoinRoom(socket: Socket, chatapp: Namespace, roomName: str
 
 export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName: string): void {
 
-    const typingUsersArray = Array.from(typingUsers)
-
     if(!roomName || !allowedRooms.includes(roomName)) {
         socket.emit("error", "Action not allowed")
         return
@@ -34,10 +32,9 @@ export function handleTypedInUsers(chatapp: Namespace, socket: Socket, roomName:
     const socketUsername = users.get(socket.id)
     typingUsers.add(socketUsername as string)
 
-    console.log("Typing users:", typingUsersArray)
-    chatapp.to(roomName).emit("showTyping", typingUsersArray)
-
+    chatapp.to(roomName).emit("showTyping", Array.from(typingUsers)) //Client expects an array
 }
+
 
 
 export async function handleMessage(socket: Socket, chatapp: Namespace, data: IMessageData) {
