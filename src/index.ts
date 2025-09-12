@@ -57,10 +57,8 @@ chatapp.on('connection', (socket) => {
 
     // Listening for typing users
     //Client detects typing and calls this
-    socket.on('typedIn', (roomName: string) => handleTypedInUsers(chatapp, socket, roomName))
-
-    //Next: remove typing users
-
+    socket.on('typedIn', (roomName: string) => handleTypedInUsers(chatapp, socket, roomName))// Removing of typing users are handled by this event too
+    
 })
 
 
