@@ -3,7 +3,7 @@ import app from './app.js';
 import { Server } from 'socket.io';
 
 // Middlewares
-import { socketLoggerEntry } from './socket-middleware/logger.js';
+// import { socketLoggerEntry } from './socket-middleware/logger.js'; --- TEMPORARY
 import { requireUsername } from './socket-middleware/require-username.js';
 
 // ChatApp Routes
@@ -38,7 +38,7 @@ const chatapp = io.of('/chat')
 
 
 // Middlewares
-chatapp.use(socketLoggerEntry)
+// chatapp.use(socketLoggerEntry) --- TEMPORARY
 chatapp.use(requireUsername)
 
 chatapp.on('connection', (socket) => {
