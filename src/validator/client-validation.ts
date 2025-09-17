@@ -7,14 +7,24 @@ const MessageDataSchema = Joi.object({
 
 export async function validateMessageData(data: Object) {
     try {
-        const value = await MessageDataSchema.validateAsync(data, {
-            abortEarly: true,
-            stripUnknown: true
-        })
-        return value
+        return await MessageDataSchema.validateAsync(data, { abortEarly: true, stripUnknown: true })
     }
     catch(err: any){
         console.log(`Validation error: ${err.message}`) // testing purposes
         return false
     }
 }
+
+
+
+const UsernameSchema = Joi.string().regex(/^[a-zA-Z0-9]+$/).required()
+
+export async function validateUsername(username: string) {
+    try{
+        return await UsernameSchema.validateAsync(username, { abortEarly: true, stripUnknown: true })
+    }
+    catch(err){
+        console.log(`VALIDATION ERROR: ${err}`)
+        return false
+    }
+} 
