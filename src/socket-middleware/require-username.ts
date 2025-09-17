@@ -10,7 +10,7 @@ export async function requireUsername(socket: Socket, next: any){
         return next(new Error("Username required"))
       }
 
-    //TO-DO: Finish this USERNAME validation feature.
+    
     const usernameValidate = await validateUsername(socketUsername)
     if(!usernameValidate) {
       return next(new Error("Invalid username characters!"))
