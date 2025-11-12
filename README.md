@@ -20,6 +20,13 @@ A simple real-time chat application built with **Socket.IO** and **TypeScript**,
 - Run Server
 - ```npm start```
 
+## Features
+
+- Username reinforced middleware
+- Show typing users
+- Basic name validation
+- Join/Leave Announcements
+
 
 ## Goals / Roadmap
 
