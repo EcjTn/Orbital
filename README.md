@@ -17,6 +17,9 @@ A simple real-time chat application built with **Socket.IO** and **TypeScript**,
 - Install dependencies
 - ```npm install```
 
+- Compile
+- ```npm run compile```
+
 - Run Server
 - ```npm start```
 
