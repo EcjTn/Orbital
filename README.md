@@ -1,3 +1,5 @@
+# Discontinued.
+
 # Realtime Communication Project
 
 A simple real-time chat application built with **Socket.IO** and **TypeScript**, currently under development.
@@ -30,13 +32,6 @@ A simple real-time chat application built with **Socket.IO** and **TypeScript**,
 - Basic name validation
 - Join/Leave Announcements
 
-
-## Goals / Roadmap
-
-- Upgrade for full **browser client support**.✅
-- Integrate **Express.js features** such as authentication and security enhancements.
-- Implement persistent user storage to survive server restarts.
-- Add more advanced chat features (rooms, private messaging, notifications).
 
 ## Notes
 
