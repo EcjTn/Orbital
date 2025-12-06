@@ -1,5 +1,3 @@
-# Discontinued.
-
 # Realtime Communication Project
 
 A simple real-time chat application built with **Socket.IO** and **TypeScript**, currently under development.
@@ -36,4 +34,4 @@ A simple real-time chat application built with **Socket.IO** and **TypeScript**,
 ## Notes
 
 - Currently, all usernames are reset upon server restart.
-- Designed to keep the core simple and lightweight while laying the foundation for future enhancements.
+- Designed to keep the core simple and lightweight.
